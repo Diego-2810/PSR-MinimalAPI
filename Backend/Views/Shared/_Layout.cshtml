@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Pizzería PSR</title>
+
+    <!-- Hojas de estilo globales y de la Landing Page -->
+    <link rel="stylesheet" href="~/css/landing.css" asp-append-version="true" />
+</head>
+<body class="pizza-landing-body">
+    
+    <!-- Navbar / Menú de navegación global con Tag Helpers de ASP.NET Core -->
+    <header>
+        <nav style="background-color: #1A1412; padding: 1rem 0; border-bottom: 2px solid #D9381E;">
+            <div class="pizza-landing-container" style="display: flex; justify-content: space-between; align-items: center;">
+                <a asp-controller="Home" asp-action="Index" style="font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 800; color: #FFFFFF; text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>🍕</span> Pizzería PSR
+                </a>
+
+                <ul style="display: flex; list-style: none; gap: 1.75rem; align-items: center; margin: 0; padding: 0;">
+                    <li>
+                        <a asp-controller="Home" asp-action="Index" style="color: #F9F3EE; text-decoration: none; font-weight: 600; font-size: 0.95rem;">Inicio</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Menu" asp-action="Index" style="color: #C2B7B1; text-decoration: none; font-weight: 600; font-size: 0.95rem;">Menú</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Pedido" asp-action="Seguimiento" style="color: #C2B7B1; text-decoration: none; font-weight: 600; font-size: 0.95rem;">Seguimiento</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Pedido" asp-action="Crear" style="background: linear-gradient(135deg, #E87A1E 0%, #D9381E 100%); color: #FFFFFF; padding: 0.65rem 1.4rem; border-radius: 9999px; text-decoration: none; font-weight: 700; font-size: 0.9rem; box-shadow: 0 4px 14px rgba(217, 56, 30, 0.35);">
+                            Pedir Ahora 🍕
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Punto de inyección de las vistas hijas (Instrucción obligatoria Razor) -->
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <!-- Inyección de scripts adicionales específicos de cada vista -->
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

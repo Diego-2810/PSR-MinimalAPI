@@ -1,34 +1,41 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Backend.Repositories;
+using Backend.Services;
 using Backend.Sockets;
 using Backend.Endpoints;
-using Scalar.AspNetCore; // <-- NUEVO 1: Importamos la librería de Scalar
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- NUEVO 2: Configuramos el generador del documento técnico (OpenAPI) ---
+// 1. Configuración de controladores y vistas MVC
+builder.Services.AddControllersWithViews();
+
+// 2. Generador del documento técnico (OpenAPI / Scalar)
 builder.Services.AddOpenApi(); 
-// --------------------------------------------------------------------------
 
-// Registro de repositorios y servicios de negocio
+// 3. Registro de repositorios y servicios de negocio (Síncrono y Asíncrono)
 builder.Services.AddSingleton<IPedidoRepository, InMemoryPedidoRepository>();
+builder.Services.AddSingleton<IPedidoRepositoryAsync, PedidoRepositoryAsync>();
+builder.Services.AddScoped<IPedidoService, PedidoService>();
 
-// Registro de servicio de Sockets TCP para Cocina y Reparto
+// 4. Registro de servicio de Sockets TCP para Cocina y Reparto
 builder.Services.AddSingleton<SocketServerService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<SocketServerService>());
 
 var app = builder.Build();
 
-// --- NUEVO 3: Encendemos los endpoints de la interfaz gráfica ---
-app.MapOpenApi(); // Crea un archivo .json oculto con la estructura de tu API
-app.MapScalarApiReference(); // Lee ese .json y te crea la página web visual
-// ----------------------------------------------------------------
+// 5. Servir archivos estáticos (wwwroot/css/landing.css)
+app.UseStaticFiles();
 
-// Endpoint de prueba rápido
-app.MapGet("/", () => "API de Gestión de Pedidos - Servidor en línea.");
+app.UseRouting();
 
-// Mapear los endpoints modularizados
+// 6. Endpoints de la interfaz gráfica OpenAPI / Scalar
+app.MapOpenApi(); 
+app.MapScalarApiReference(); 
+
+// 7. Mapear endpoints de la Minimal API y ruteo predeterminado MVC (Home/Index)
 app.MapPedidoEndpoints();
+app.MapDefaultControllerRoute(); // Apunta a HomeController.Index por defecto
 
 app.Run();
