@@ -1,0 +1,64 @@
+/* ==========================================================================
+   Módulo: Variables y Reset
+   Contiene tipografía, colores, sombras, variables globales y el reseteo CSS
+   ========================================================================== */
+
+/* Importación de tipografía de alta calidad desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Paleta de Colores Cálida & Artesanal */
+  --color-primary: #D9381E;         /* Rojo Terracota / Fuego */
+  --color-primary-hover: #B82A13;   /* Rojo Profundo al pasar cursor */
+  --color-secondary: #E87A1E;       /* Naranja Ámbar / Horno de Leña */
+  --color-secondary-hover: #D16812;
+  --color-accent: #FFB338;          /* Dorado Cálido / Queso Fundido */
+  --color-dark: #1A1412;             /* Carbón de Quebracho */
+  --color-dark-surface: #241D1A;     /* Superficie Oscura de Tarjetas */
+  --color-cream: #FAF4EE;            /* Crema Harina / Masa Madre */
+  --color-cream-card: #FFFFFF;       /* Fondo Blanco Cálido */
+  --color-text-main: #2C221E;        /* Texto Principal Carbón */
+  --color-text-muted: #7A6C65;      /* Texto Secundario */
+  --color-text-light: #F9F3EE;      /* Texto Claro sobre fondo oscuro */
+  --color-border: #EFE4D8;           /* Bordes suaves */
+
+  /* Degradados */
+  --gradient-btn: linear-gradient(135deg, #E87A1E 0%, #D9381E 100%);
+  --gradient-btn-hover: linear-gradient(135deg, #F5892D 0%, #C42D15 100%);
+  --gradient-hero-overlay: radial-gradient(circle at 80% 20%, rgba(232, 122, 30, 0.18) 0%, rgba(217, 56, 30, 0.05) 50%, transparent 80%);
+  --gradient-glow: radial-gradient(circle, rgba(232, 122, 30, 0.3) 0%, rgba(217, 56, 30, 0) 70%);
+
+  /* Sombras */
+  --shadow-sm: 0 2px 10px rgba(26, 20, 18, 0.05);
+  --shadow-md: 0 8px 26px rgba(26, 20, 18, 0.08);
+  --shadow-lg: 0 20px 40px rgba(217, 56, 30, 0.15);
+  --shadow-cta: 0 12px 32px rgba(217, 56, 30, 0.4);
+  --shadow-cta-hover: 0 16px 40px rgba(217, 56, 30, 0.55);
+
+  /* Tipografías */
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+  /* Radios & Transiciones */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 9999px;
+  --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Base & Reset Responsivo */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body.pizza-landing-body {
+  font-family: var(--font-body);
+  background-color: var(--color-cream);
+  color: var(--color-text-main);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
