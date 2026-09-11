@@ -1,0 +1,16 @@
+[
+  {
+    "outputFileName": "wwwroot/css/bundle.min.css",
+    "inputFiles": [
+      "wwwroot/css/variables.css",
+      "wwwroot/css/layout.css",
+      "wwwroot/css/botones.css",
+      "wwwroot/css/hero.css",
+      "wwwroot/css/features.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "lowerCamelCase": false
+    }
+  }
+]

@@ -1,10 +1,11 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Shared.Models;
-using Backend.Repositories;
+using Backend.Services;
 using Backend.Sockets;
 using Backend.DTOs;
 
@@ -12,6 +13,7 @@ namespace Backend.Endpoints;
 
 /// <summary>
 /// Proporciona métodos de extensión para modularizar y registrar las rutas de la Minimal API.
+/// Se comunica con la capa de aplicación/negocio utilizando IPedidoService de forma asíncrona.
 /// </summary>
 public static class PedidoEndpoints
 {
@@ -19,21 +21,22 @@ public static class PedidoEndpoints
     {
         var group = app.MapGroup("/api/pedidos");
 
-        // Obtener todos los pedidos
-        group.MapGet("/", (IPedidoRepository repo) =>
+        // Obtener todos los pedidos asíncronamente
+        group.MapGet("/", async (IPedidoService pedidoService) =>
         {
-            return Results.Ok(repo.ObtenerTodos());
+            var pedidos = await pedidoService.ListarPedidosAsync();
+            return Results.Ok(pedidos);
         });
 
-        // Obtener un pedido por ID
-        group.MapGet("/{id:int}", (int id, IPedidoRepository repo) =>
+        // Obtener un pedido por ID asíncronamente
+        group.MapGet("/{id:int}", async (int id, IPedidoService pedidoService) =>
         {
-            var pedido = repo.ObtenerPorId(id);
+            var pedido = await pedidoService.ConsultarPedidoPorIdAsync(id);
             return pedido is not null ? Results.Ok(pedido) : Results.NotFound($"El pedido #{id} no existe.");
         });
 
-        // Crear un nuevo pedido
-        group.MapPost("/", async (CrearPedidoRequest request, IPedidoRepository repo, SocketServerService socketServer) =>
+        // Crear un nuevo pedido asíncronamente a través del servicio de negocio
+        group.MapPost("/", async (CrearPedidoRequest request, IPedidoService pedidoService, SocketServerService socketServer) =>
         {
             try
             {
@@ -42,7 +45,7 @@ public static class PedidoEndpoints
                     .ToList();
 
                 var nuevoPedido = new Pedido(0, request.Cliente, request.Direccion, itemsDominio);
-                var pedidoCreado = repo.Crear(nuevoPedido);
+                var pedidoCreado = await pedidoService.RegistrarPedidoAsync(nuevoPedido);
 
                 bool enviado = await socketServer.EnviarACocinaAsync(pedidoCreado);
 
@@ -63,12 +66,16 @@ public static class PedidoEndpoints
             {
                 return Results.BadRequest(new { Error = ex.Message });
             }
+            catch (InvalidOperationException ex)
+            {
+                return Results.BadRequest(new { Error = ex.Message });
+            }
         });
 
         // Reintentar cocinar un pedido pendiente
-        group.MapPost("/{id:int}/cocinar", async (int id, IPedidoRepository repo, SocketServerService socketServer) =>
+        group.MapPost("/{id:int}/cocinar", async (int id, IPedidoService pedidoService, SocketServerService socketServer) =>
         {
-            var pedido = repo.ObtenerPorId(id);
+            var pedido = await pedidoService.ConsultarPedidoPorIdAsync(id);
             if (pedido == null)
             {
                 return Results.NotFound($"El pedido #{id} no existe.");

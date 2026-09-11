@@ -14,8 +14,7 @@ builder.Services.AddControllersWithViews();
 // 2. Generador del documento técnico (OpenAPI / Scalar)
 builder.Services.AddOpenApi(); 
 
-// 3. Registro de repositorios y servicios de negocio (Síncrono y Asíncrono)
-builder.Services.AddSingleton<IPedidoRepository, InMemoryPedidoRepository>();
+// 3. Registro de repositorios y servicios de negocio de forma 100% asíncrona
 builder.Services.AddSingleton<IPedidoRepositoryAsync, PedidoRepositoryAsync>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();
 

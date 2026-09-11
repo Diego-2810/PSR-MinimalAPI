@@ -19,7 +19,7 @@ namespace Backend.Sockets;
 /// </summary>
 public class SocketServerService : BackgroundService
 {
-    private readonly IPedidoRepository _pedidoRepository;
+    private readonly IPedidoRepositoryAsync _pedidoRepository;
     private readonly ILogger<SocketServerService> _logger;
     private readonly TcpListener _listener;
     
@@ -27,7 +27,7 @@ public class SocketServerService : BackgroundService
     private TcpClient? _repartoClient;
     private readonly object _lock = new();
 
-    public SocketServerService(IPedidoRepository pedidoRepository, ILogger<SocketServerService> logger)
+    public SocketServerService(IPedidoRepositoryAsync pedidoRepository, ILogger<SocketServerService> logger)
     {
         _pedidoRepository = pedidoRepository;
         _logger = logger;
@@ -140,11 +140,10 @@ public class SocketServerService : BackgroundService
         {
             if (int.TryParse(mensaje.Split(':')[1], out int id))
             {
-                var pedido = _pedidoRepository.ObtenerPorId(id);
+                var pedido = await _pedidoRepository.ObtenerPorIdAsync(id);
                 if (pedido != null)
                 {
-                    pedido.MarcarComoListo();
-                    _pedidoRepository.Actualizar(pedido);
+                    await _pedidoRepository.ActualizarEstadoAsync(id, EstadoPedido.ListoParaReparto);
                     _logger.LogInformation("Pedido #{Id} marcado como Listo para Reparto.", id);
 
                     await EnviarARepartoAsync(pedido);
@@ -155,11 +154,10 @@ public class SocketServerService : BackgroundService
         {
             if (int.TryParse(mensaje.Split(':')[1], out int id))
             {
-                var pedido = _pedidoRepository.ObtenerPorId(id);
+                var pedido = await _pedidoRepository.ObtenerPorIdAsync(id);
                 if (pedido != null)
                 {
-                    pedido.Entregar();
-                    _pedidoRepository.Actualizar(pedido);
+                    await _pedidoRepository.ActualizarEstadoAsync(id, EstadoPedido.Entregado);
                     _logger.LogInformation("Pedido #{Id} marcado como ENTREGADO.", id);
                 }
             }
@@ -182,8 +180,7 @@ public class SocketServerService : BackgroundService
 
         try
         {
-            pedido.IniciarPreparacion();
-            _pedidoRepository.Actualizar(pedido);
+            await _pedidoRepository.ActualizarEstadoAsync(pedido.Id, EstadoPedido.EnCocina);
 
             string json = JsonSerializer.Serialize(pedido);
             byte[] bytes = Encoding.UTF8.GetBytes(json + "\n");
@@ -215,8 +212,7 @@ public class SocketServerService : BackgroundService
 
         try
         {
-            pedido.EnviarAReparto();
-            _pedidoRepository.Actualizar(pedido);
+            await _pedidoRepository.ActualizarEstadoAsync(pedido.Id, EstadoPedido.EnReparto);
 
             string json = JsonSerializer.Serialize(pedido);
             byte[] bytes = Encoding.UTF8.GetBytes(json + "\n");

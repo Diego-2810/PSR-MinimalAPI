@@ -70,3 +70,29 @@ Este documento registra de forma cronológica todas las tareas, componentes desa
 ### 7. Reorganización de Archivos dentro del Proyecto `Backend/`
 * **Lo realizado**:
   * Se movieron y unificaron las carpetas `Controllers/`, `Views/` y `wwwroot/` directamente dentro del directorio ejecutable `Backend/` para asegurar que el motor Razor de ASP.NET Core localice nativamente las vistas y recursos estáticos sin errores de ruta.
+
+---
+
+## 📅 Sesión de Trabajo - Requisitos de Evaluación del 3er Bimestre
+
+### 8. Implementación Estricta N-Capas y Asincronismo (`async`/`await`)
+* **Ubicación de archivos**:
+  * `Backend/Repositories/IPedidoRepositoryAsync.cs` & `PedidoRepositoryAsync.cs`
+  * `Backend/Services/IPedidoService.cs` & `PedidoService.cs`
+  * `Backend/Controllers/HomeController.cs` & `Controllers/HomeController.cs`
+  * `Backend/Endpoints/PedidoEndpoints.cs`
+* **Lo realizado**:
+  * Se garantizó el desacoplamiento total N-Capas: Controlador -> Servicio (`IPedidoService`) -> Repositorio (`IPedidoRepositoryAsync`) -> Entidades de Dominio.
+  * Todas las operaciones de negocio y consulta de datos fueron convertidas a métodos asíncronos retornando `Task<T>`.
+  * Se refactorizó `HomeController` para inyectar únicamente `IPedidoService` por constructor y servir las vistas utilizando `async Task<IActionResult>`.
+
+### 9. Implementación de Bundling y Minificación (`bundleconfig.json`)
+* **Ubicación de archivos**:
+  * `bundleconfig.json` (Raíz y `Backend/`)
+  * `wwwroot/css/bundle.min.css` (Raíz y `Backend/`)
+  * `Views/Shared/_Layout.cshtml` (Raíz y `Backend/`)
+* **Lo realizado**:
+  * Se configuró `bundleconfig.json` para unificar y minificar los 5 archivos CSS divididos (`variables.css`, `layout.css`, `botones.css`, `hero.css`, `features.css`).
+  * Se generó `bundle.min.css` optimizando el tiempo de carga del sitio.
+  * Se actualizó `_Layout.cshtml` con `<link rel="stylesheet" href="~/css/bundle.min.css" asp-append-version="true" />`.
+

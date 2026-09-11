@@ -1,34 +1,56 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Backend.Services;
+using Shared.Models;
 
 namespace Backend.Controllers;
 
 /// <summary>
-/// Controlador MVC principal encargado de gestionar la Landing Page de la Pizzería.
-/// Cumple con el patrón MVC heredando de la clase Controller de ASP.NET Core.
+/// Controlador MVC principal encargado de gestionar la Landing Page y visualización de la Pizzería.
+/// Cumple estrictamente con la arquitectura N-Capas comunicándose EXCLUSIVAMENTE con IPedidoService.
+/// Todas sus acciones utilizan programación asíncrona (Task<IActionResult>).
 /// </summary>
 public class HomeController : Controller
 {
+    private readonly IPedidoService _pedidoService;
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(IPedidoService pedidoService, ILogger<HomeController> logger)
     {
+        _pedidoService = pedidoService;
         _logger = logger;
     }
 
     /// <summary>
-    /// Acción principal que sirve la Landing Page artesanal (Index.cshtml).
+    /// Acción principal asíncrona que sirve la Landing Page principal (Index.cshtml) con datos de pedidos.
     /// </summary>
-    /// <returns>Devuelve explícitamente la vista principal.</returns>
     [HttpGet]
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         _logger.LogInformation("Navegando a la Landing Page principal de la Pizzería PSR.");
-        return View();
+        var pedidos = await _pedidoService.ListarPedidosAsync();
+        return View(pedidos);
     }
 
     /// <summary>
-    /// Vista secundaria opcional para políticas / privacidad.
+    /// Acción de seguimiento asíncrona para consultar el estado de pedidos mediante IPedidoService.
+    /// </summary>
+    [HttpGet]
+    public async Task<IActionResult> Seguimiento(int? id)
+    {
+        if (id.HasValue && id.Value > 0)
+        {
+            var pedido = await _pedidoService.ConsultarPedidoPorIdAsync(id.Value);
+            ViewData["PedidoConsultado"] = pedido;
+        }
+
+        var pedidos = await _pedidoService.ListarPedidosAsync();
+        return View(pedidos);
+    }
+
+    /// <summary>
+    /// Vista de información secundaria / privacidad.
     /// </summary>
     [HttpGet]
     public IActionResult Privacy()
@@ -36,3 +58,4 @@ public class HomeController : Controller
         return View();
     }
 }
+
