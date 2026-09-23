@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Shared.Models;
-using Backend.Services;
+using Shared.Services;
 using Backend.Sockets;
 using Backend.DTOs;
 

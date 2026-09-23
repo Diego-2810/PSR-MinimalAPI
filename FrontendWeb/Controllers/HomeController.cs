@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Backend.Services;
+using Shared.Services;
 using Shared.Models;
 
-namespace Backend.Controllers;
+namespace FrontendWeb.Controllers;
 
 /// <summary>
 /// Controlador MVC principal encargado de gestionar la Landing Page y visualización de la Pizzería.

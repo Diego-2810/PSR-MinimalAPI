@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Shared.Models;
 
-namespace Backend.Repositories;
+namespace Shared.Repositories;
 
 /// <summary>
 /// Define las operaciones del repositorio para administrar los pedidos.

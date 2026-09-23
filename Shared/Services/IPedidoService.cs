@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Shared.Models;
 
-namespace Backend.Services;
+namespace Shared.Services;
 
 /// <summary>
 /// Interfaz para la capa de servicios de negocio de pedidos.

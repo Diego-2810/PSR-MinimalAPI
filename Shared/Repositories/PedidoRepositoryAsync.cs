@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Shared.Models;
 
-namespace Backend.Repositories;
+namespace Shared.Repositories;
 
 /// <summary>
 /// Implementación asíncrona del repositorio de pedidos en memoria.

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Backend.Repositories;
+using Shared.Repositories;
 using Shared.Models;
 
-namespace Backend.Services;
+namespace Shared.Services;
 
 /// <summary>
 /// Capa de Servicio de Negocio.

@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Shared.Models;
 
-namespace Backend.Repositories;
+namespace Shared.Repositories;
 
 /// <summary>
 /// Implementación del repositorio en memoria utilizando una estructura de datos segura para subprocesos.

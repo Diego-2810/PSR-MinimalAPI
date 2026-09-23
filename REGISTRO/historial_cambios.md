@@ -1,5 +1,14 @@
 # Bitácora de Modificaciones - Arquitectura Frontend
 
+## Fecha: 2026-09-23
+
+### Reestructuración Crítica: Separación de Backend Minimal API y Frontend MVC (Rollback)
+Se realizó una separación estricta y física de responsabilidades para respetar los requisitos de sistemas distribuidos, deshaciendo la unificación errónea previa:
+- **Backend (Minimal API)**: Se limpió de cualquier artefacto MVC (`Controllers`, `Views`, `wwwroot`). El `Program.cs` se restauró para servir EXCLUSIVAMENTE endpoints puros, Sockets y OpenAPI.
+- **FrontendWeb (MVC)**: Se creó un nuevo proyecto ASP.NET Core MVC completamente aislado. A este proyecto se trasladaron los `Controllers` (HomeController), la capa de presentación (`Views`) y estáticos (`wwwroot`, `bundleconfig.json`).
+- **Shared (Biblioteca de Clases)**: Además de mantener las Entidades/Dominio (Pedido, ItemPedido), se movieron aquí las carpetas `Services` y `Repositories`. Sus namespaces fueron actualizados a `Shared.Services` y `Shared.Repositories`. De esta manera, tanto el FrontendWeb (para las Vistas) como el Backend (para Endpoints) pueden referenciar e inyectar esta lógica de negocio sin mezclarse entre sí.
+- Todos los proyectos compilan correctamente y respetan la arquitectura orientada a servicios.
+
 ## Fecha: 2026-09-09
 
 ### Refactorización de CSS (Modularización)

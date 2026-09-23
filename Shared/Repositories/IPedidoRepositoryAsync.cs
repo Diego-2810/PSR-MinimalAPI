@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Shared.Models;
 
-namespace Backend.Repositories;
+namespace Shared.Repositories;
 
 /// <summary>
 /// Interfaz del Repositorio Asíncrono de Pedidos.
